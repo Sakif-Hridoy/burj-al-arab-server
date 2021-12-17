@@ -12,10 +12,18 @@ app.use(cors());
 app.use(bodyParser.json());
 
 client.connect(err => {
-  const collection = client.db("burjAlArab").collection("bookings");
+  const bookings = client.db("burjAlArab").collection("bookings");
   // perform actions on the collection object
-  console.log("database connected successfully")
-  client.close();
+  // console.log("database connected successfully")
+  app.post('/addBooking',(req,res)=>{
+    const newBooking = req.body;
+    bookings.insertOne(newBooking)
+    .then(result=>{
+      res.send(result.insertedCount > 0);
+    })
+    console.log(newBooking);
+  
+  })
 });
 
 
@@ -25,10 +33,4 @@ app.get('/', (req, res) => {
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
-})
-
-app.post('/addBooking',(req,res)=>{
-  const newBooking = req.body;
-  console.log(newBooking);
-
 })
