@@ -24,6 +24,15 @@ client.connect(err => {
     console.log(newBooking);
   
   })
+
+
+  app.get('/bookings',(req,res)=>{
+    bookings.find({})
+    .toArray((err,documents)=>{
+      res.send(documents)
+    })
+  })
+
 });
 
 
