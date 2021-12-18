@@ -27,7 +27,8 @@ client.connect(err => {
 
 
   app.get('/bookings',(req,res)=>{
-    bookings.find({})
+    // console.log(req.query.email);
+    bookings.find({email:req.query.email})
     .toArray((err,documents)=>{
       res.send(documents)
     })
