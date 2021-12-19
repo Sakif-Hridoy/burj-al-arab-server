@@ -1,4 +1,5 @@
 const express = require('express')
+const { initializeApp } = require('firebase-admin/app');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { MongoClient } = require('mongodb');
