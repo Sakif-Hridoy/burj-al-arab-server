@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 
 
 var admin = require("firebase-admin");
-
+// generate key from service account of firebase and and this file to project directory and rewrite the path name pf serviceAccount var
 var serviceAccount = require("burj-al-arab-8f7bc-firebase-adminsdk-sh6ky-e57a07ce1d.json");
 
 admin.initializeApp({
