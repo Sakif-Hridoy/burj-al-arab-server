@@ -1,5 +1,11 @@
 const express = require('express')
 const { initializeApp } = require('firebase-admin/app');
+// import { getAuth} from "firebase/auth";
+
+// const auth = getAuth(firebaseApp);
+// onAuthStateChanged(auth, user => {
+//   // Check for user status
+// });
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { MongoClient } = require('mongodb');
@@ -15,7 +21,7 @@ app.use(bodyParser.json());
 
 var admin = require("firebase-admin");
 // generate key from service account of firebase and and this file to project directory and rewrite the path name pf serviceAccount var
-var serviceAccount = require("burj-al-arab-8f7bc-firebase-adminsdk-sh6ky-e57a07ce1d.json");
+var serviceAccount = require("./burj-al-arab-8f7bc-firebase-adminsdk-sh6ky-e57a07ce1d.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -28,24 +34,47 @@ client.connect(err => {
   const bookings = client.db("burjAlArab").collection("bookings");
   // perform actions on the collection object
   // console.log("database connected successfully")
-  app.post('/addBooking',(req,res)=>{
+  app.post('/addBooking', (req, res) => {
     const newBooking = req.body;
     bookings.insertOne(newBooking)
-    .then(result=>{
-      res.send(result.insertedCount > 0);
-    })
+      .then(result => {
+        res.send(result.insertedCount > 0);
+      })
     console.log(newBooking);
-  
+
   })
 
 
-  app.get('/bookings',(req,res)=>{
+  app.get('/bookings', (req, res) => {
     // console.log(req.query.email);
-    console.log(req.headers.authorization)
-    bookings.find({email:req.query.email})
-    .toArray((err,documents)=>{
-      res.send(documents)
-    })
+    const bearer = req.headers.authorization;
+    if (bearer && bearer.startsWith('Bearer ')) {
+      const idToken = bearer.split(' ')[1];
+      console.log({ idToken });
+      // idToken comes from the client app
+      admin.auth()
+        .verifyIdToken(idToken)
+        .then((decodedToken) => {
+          const tokenEmail = decodedToken.email;
+          const queryEmail = req.query.email;
+          console.log(tokenEmail,queryEmail);
+          if (tokenEmail == req.query.email) {
+            // access user data api via email
+            bookings.find({ email: req.query.email })
+              .toArray((err, documents) => {
+                res.send(documents)
+              })
+          }
+          console.log("uid", uid);
+          // ...
+        })
+        .catch((error) => {
+          // Handle error
+        });
+    }
+
+
+
   })
 
 });
