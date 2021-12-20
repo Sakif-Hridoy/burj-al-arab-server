@@ -13,14 +13,14 @@ app.use(cors());
 app.use(bodyParser.json());
 
 
-// var admin = require("firebase-admin");
+var admin = require("firebase-admin");
 
-// var serviceAccount = require("burj-al-arab-8f7bc-firebase-adminsdk-sh6ky-e57a07ce1d.json");
+var serviceAccount = require("burj-al-arab-8f7bc-firebase-adminsdk-sh6ky-e57a07ce1d.json");
 
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount),
-//   databaseURL: 'https://burj-al-arab.firebaseio.com'
-// });
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://burj-al-arab.firebaseio.com'
+});
 
 
 
