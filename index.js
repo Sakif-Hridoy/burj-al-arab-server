@@ -62,16 +62,20 @@ client.connect(err => {
             // access user data api via email
             bookings.find({ email: req.query.email })
               .toArray((err, documents) => {
-                res.send(documents)
+                res.status(200).send(documents)
               })
           }
           console.log("uid", uid);
           // ...
         })
         .catch((error) => {
-          // Handle error
+          // res.status(401).send('unauthorized access');
         });
     }
+    else{
+      res.status(401).send('unauthorized access');
+    }
+    
 
 
 
